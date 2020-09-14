@@ -61,6 +61,7 @@ class AndroidAutoConfigurationTest {
         }
     }
 
+    @Ignore
     @Test
     fun `source sets have non-empty classpath`() {
         val dokkaTasks = project.tasks.withType<DokkaTask>().toList()
