@@ -50,7 +50,7 @@ abstract class DokkaMultiModuleTask : AbstractDokkaParentTask(DokkaMultimoduleBo
         moduleName = moduleName.getSafe(),
         outputDir = outputDirectory.getSafe(),
         cacheRoot = cacheRoot.getSafe(),
-        pluginsConfiguration = pluginsConfiguration.mapNotNull { it as? PluginConfigurationImpl }.toMutableList(),
+        pluginsConfiguration = buildPluginsConfiguration(),
         failOnWarning = failOnWarning.getSafe(),
         offlineMode = offlineMode.getSafe(),
         pluginsClasspath = plugins.resolve().toList(),

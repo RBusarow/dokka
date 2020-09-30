@@ -49,8 +49,5 @@ tasks.withType<DokkaTask> {
             kotlinSourceSet(kotlin.sourceSets["test"])
         }
     }
-    pluginConfiguration<DokkaBase, DokkaBaseConfiguration> {
-        customAssets = listOf(file("customResources/custom-resource.svg"))
-        customStyleSheets = listOf(file("customResources/logo-styles.css"), file("customResources/custom-style-to-add.css"))
-    }
+    pluginsMapConfiguration.set(mapOf(DokkaBase::class.qualifiedName to """{ "customStyleSheets": ["${file("customResources/logo-styles.css")}", "${file("customResources/custom-style-to-add.css")}"], "customAssets" : ["${file("customResources/custom-resource.svg")}"] }"""))
 }

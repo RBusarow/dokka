@@ -51,6 +51,12 @@ abstract class AbstractDokkaTask(
     @Internal
     override val pluginsConfiguration: MutableList<DokkaConfiguration.PluginConfiguration> = mutableListOf()
 
+    /**
+     * Used to keep compatibility with gradle using Kotlin lower than 1.3.50
+     */
+    @Input
+    val pluginsMapConfiguration: MapProperty<String, String> = project.objects.mapProperty()
+
     @Classpath
     val plugins: Configuration = project.maybeCreateDokkaPluginConfiguration(name)
 
@@ -83,5 +89,16 @@ abstract class AbstractDokkaTask(
 
     init {
         group = JavaBasePlugin.DOCUMENTATION_GROUP
+    }
+
+    internal fun buildPluginsConfiguration(): List<PluginConfigurationImpl> {
+        val manuallyConfigured = pluginsMapConfiguration.getSafe().entries.map { entry ->
+            PluginConfigurationImpl(
+                entry.key,
+                DokkaConfiguration.SerializedType.JSON,
+                entry.value
+            )
+        }
+        return pluginsConfiguration.mapNotNull { it as? PluginConfigurationImpl } + manuallyConfigured
     }
 }

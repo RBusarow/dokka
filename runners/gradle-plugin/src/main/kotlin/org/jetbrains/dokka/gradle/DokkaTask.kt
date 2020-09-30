@@ -32,8 +32,8 @@ abstract class DokkaTask : AbstractDokkaTask(DokkaBootstrapImpl::class) {
             .also(::checkSourceSetDependencies)
             .filterNot { it.suppress.getSafe() }
 
-    override fun buildDokkaConfiguration(): DokkaConfigurationImpl {
-        return DokkaConfigurationImpl(
+    override fun buildDokkaConfiguration(): DokkaConfigurationImpl =
+        DokkaConfigurationImpl(
             moduleName = moduleName.getSafe(),
             moduleVersion = moduleVersion.orNull,
             outputDir = outputDirectory.getSafe(),
@@ -41,8 +41,7 @@ abstract class DokkaTask : AbstractDokkaTask(DokkaBootstrapImpl::class) {
             offlineMode = offlineMode.getSafe(),
             failOnWarning = failOnWarning.getSafe(),
             sourceSets = unsuppressedSourceSets.build(),
-            pluginsConfiguration = pluginsConfiguration.mapNotNull { it as? PluginConfigurationImpl },
+            pluginsConfiguration = buildPluginsConfiguration(),
             pluginsClasspath = plugins.resolve().toList()
         )
-    }
 }
