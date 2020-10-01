@@ -22,7 +22,6 @@ import org.jetbrains.dokka.plugability.query
 import org.jetbrains.dokka.plugability.querySingle
 import org.jetbrains.dokka.utilities.htmlEscape
 import org.jetbrains.dokka.utilities.urlEncoded
-import java.io.File
 import java.net.URI
 
 open class HtmlRenderer(
