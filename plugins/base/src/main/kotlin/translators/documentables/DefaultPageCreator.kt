@@ -106,7 +106,7 @@ open class DefaultPageCreator(
 
             link(it.name, it.dri)
             if (it.sourceSets.size == 1 || (documentations.isNotEmpty() && haveSameContent)) {
-                documentations.first()?.let { firstSentenceComment(kind = ContentKind.Comment, content = it) }
+                documentations.first()?.let { firstSentenceComment(kind = ContentKind.Comment, content = it.root) }
             }
         }
     }
@@ -215,8 +215,8 @@ open class DefaultPageCreator(
         group(kind = ContentKind.Cover, sourceSets = mainSourcesetData + extensions.sourceSets) {
             cover(c.name.orEmpty())
             sourceSetDependentHint(c.dri, c.sourceSets) {
-                +contentForDescription(c)
                 +buildSignature(c)
+                +contentForDescription(c)
             }
         }
 
@@ -238,8 +238,8 @@ open class DefaultPageCreator(
                         kind = ContentKind.SourceSetDependentHint,
                         styles = emptySet()
                     ) {
-                        contentForBrief(it)
                         +buildSignature(it)
+                        contentForBrief(it)
                     }
                 }
             }
@@ -256,8 +256,8 @@ open class DefaultPageCreator(
                 ) {
                     link(it.name, it.dri)
                     sourceSetDependentHint(it.dri, it.sourceSets.toSet(), kind = ContentKind.SourceSetDependentHint) {
-                        contentForBrief(it)
                         +buildSignature(it)
+                        contentForBrief(it)
                     }
                 }
             }
@@ -453,7 +453,7 @@ open class DefaultPageCreator(
         documentable.sourceSets.forEach { sourceSet ->
             documentable.documentation[sourceSet]?.children?.firstOrNull()?.root?.let {
                 group(sourceSets = setOf(sourceSet), kind = ContentKind.BriefComment) {
-                    comment(it)
+                    firstSentenceComment(it)
                 }
             }
         }
@@ -482,12 +482,12 @@ open class DefaultPageCreator(
         }
         divergentGroup(ContentDivergentGroup.GroupID("member")) {
             instance(setOf(d.dri), d.sourceSets.toSet()) {
-                before {
-                    +contentForDescription(d)
-                    +contentForComments(d)
-                }
                 divergent(kind = ContentKind.Symbol) {
                     +buildSignature(d)
+                }
+                after {
+                    +contentForDescription(d)
+                    +contentForComments(d)
                 }
             }
         }
@@ -522,14 +522,14 @@ open class DefaultPageCreator(
                             ) {
                                 elements.map {
                                     instance(setOf(it.dri), it.sourceSets.toSet(), extra = PropertyContainer.withAll(SymbolAnchorHint)) {
-                                        before {
-                                            contentForBrief(it)
-                                            contentForSinceKotlin(it)
-                                        }
                                         divergent {
                                             group {
                                                 +buildSignature(it)
                                             }
+                                        }
+                                        after {
+                                            contentForBrief(it)
+                                            contentForSinceKotlin(it)
                                         }
                                     }
                                 }
